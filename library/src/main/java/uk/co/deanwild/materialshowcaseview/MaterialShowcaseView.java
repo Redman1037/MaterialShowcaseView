@@ -260,9 +260,9 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
      */
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.tv_dismiss){
+        if (v.getId() == R.id.tv_dismiss) {
             hide();
-        }else{
+        } else {
             skip();
         }
 
@@ -570,8 +570,8 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
          * Enforces a user-specified gravity instead of relying on the library to do that.
          */
         public Builder setGravity(int gravity) {
-          showcaseView.setGravity(gravity);
-          return this;
+            showcaseView.setGravity(gravity);
+            return this;
         }
 
         /**
@@ -770,10 +770,9 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
             if (showcaseView.mAnimationFactory == null) {
                 // create our animation factory
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !showcaseView.mUseFadeAnimation) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !showcaseView.mUseFadeAnimation) {
                     showcaseView.setAnimationFactory(new CircularRevealAnimationFactory());
-                }
-                else {
+                } else {
                     showcaseView.setAnimationFactory(new FadeAnimationFactory());
                 }
             }
@@ -808,7 +807,7 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         mCanvas = null;
         mHandler = null;
 
-        getViewTreeObserver().removeGlobalOnLayoutListener(mLayoutListener);
+        getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutListener);
         mLayoutListener = null;
 
         if (mPrefsManager != null)
@@ -900,6 +899,32 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
                     public void onAnimationStart() {
                         setVisibility(View.VISIBLE);
                         notifyOnDisplayed();
+                    }
+                }
+        );
+    }
+
+    public void fadeOut() {
+        setVisibility(INVISIBLE);
+        mAnimationFactory.animateOutView(this, mTarget.getPoint(), mFadeDurationInMillis,
+                new IAnimationFactory.AnimationEndListener() {
+                    @Override
+                    public void onAnimationEnd() {
+                        setVisibility(View.INVISIBLE);
+                        notifyOnDisplayed();
+                    }
+                }
+        );
+    }
+
+
+    public void animateIn() {
+        mAnimationFactory.animateInView(this, mTarget.getPoint(), mFadeDurationInMillis,
+                new IAnimationFactory.AnimationStartListener() {
+                    @Override
+                    public void onAnimationStart() {
+                        setVisibility(View.VISIBLE);
+                        //Todo add to window ?
                     }
                 }
         );
